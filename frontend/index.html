@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Natural Language Processing (NLP)</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .container {
+            max-width: 900px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 20px;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .card {
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .card-header {
+            background-color: #e9ecef;
+            border-bottom: 1px solid #e0e0e0;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-weight: bold;
+            color: #34495e;
+            padding: 15px 20px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 8px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+            transform: translateY(-2px);
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+        }
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+            border-color: #80bdff;
+        }
+        .spinner-border {
+            width: 1.5rem;
+            height: 1.5rem;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        .alert {
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .result-box {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
+            word-break: break-word; /* Break long words */
+        }
+        audio {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Azure Natural Language Processing (NLP)</h1>
+        <h4 class="text-center">Text Analysis, Language Detection, OCR (Optical Character Recognition), Text-to-Speech/Speech to Text Conversion</h4>
+        <p class="text-center text-muted">((Created by khalid kifayat))</p>
+
+        <!-- Text Analysis Card -->
+        <div class="card">
+            <div class="card-header">Text Analysis (Opinion Mining & Key Phrase Extraction)</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="textAnalysisInput" class="form-label">Enter text for analysis:</label>
+                    <textarea class="form-control" id="textAnalysisInput" rows="4" placeholder="e.g., The food was amazing, but the service was incredibly slow."></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" id="analyzeTextBtn">
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    Analyze Text
+                </button>
+                <div id="textAnalysisResult" class="result-box mt-3 d-none"></div>
+                <div id="textAnalysisError" class="alert alert-danger d-none" role="alert"></div>
+            </div>
+        </div>
+
+        <!-- Language Detection Card -->
+        <div class="card">
+            <div class="card-header">Language Detection</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="languageDetectionInput" class="form-label">Enter text to detect language:</label>
+                    <textarea class="form-control" id="languageDetectionInput" rows="2" placeholder="e.g., Hola, ¿cómo estás?"></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" id="detectLanguageBtn">
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    Detect Language
+                </button>
+                <div id="languageDetectionResult" class="result-box mt-3 d-none"></div>
+                <div id="languageDetectionError" class="alert alert-danger d-none" role="alert"></div>
+            </div>
+        </div>
+
+        <!-- OCR Card -->
+        <div class="card">
+            <div class="card-header">OCR (Optical Character Recognition)</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="ocrFileInput" class="form-label">Upload an image for OCR:</label>
+                    <input class="form-control" type="file" id="ocrFileInput" accept="image/*">
+                </div>
+                <button type="button" class="btn btn-primary" id="ocrBtn">
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    Perform OCR
+                </button>
+                <div id="ocrResult" class="result-box mt-3 d-none"></div>
+                <div id="ocrError" class="alert alert-danger d-none" role="alert"></div>
+            </div>
+        </div>
+
+        <!-- Text-to-Speech Card -->
+        <div class="card">
+            <div class="card-header">Text-to-Speech Conversion</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="ttsTextInput" class="form-label">Enter text to convert to speech:</label>
+                    <textarea class="form-control" id="ttsTextInput" rows="3" placeholder="e.g., Hello, this is a test of the text to speech service."></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="ttsVoiceSelect" class="form-label">Select Voice:</label>
+                    <select class="form-select" id="ttsVoiceSelect">
+                        <!-- Common English Voices. More can be found in Azure Speech documentation. -->
+                        <option value="en-US-JennyNeural">English (US) - Jenny Neural</option>
+                        <option value="en-US-GuyNeural">English (US) - Guy Neural</option>
+                        <option value="en-GB-LibbyNeural">English (UK) - Libby Neural</option>
+                        <option value="en-GB-RyanNeural">English (UK) - Ryan Neural</option>
+                        <option value="fr-FR-DeniseNeural">French (France) - Denise Neural</option>
+                        <option value="es-ES-ElviraNeural">Spanish (Spain) - Elvira Neural</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary" id="ttsBtn">
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    Generate Speech
+                </button>
+                <div id="ttsAudioContainer" class="mt-3 d-none">
+                    <audio controls id="ttsAudio"></audio>
+                </div>
+                <div id="ttsError" class="alert alert-danger d-none" role="alert"></div>
+            </div>
+        </div>
+   
+
+    </div>
+
+    <!-- Bootstrap JS (bundle includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Custom JavaScript -->
+    <script>
+        // --- Configuration ---
+        const BACKEND_URL = 'http://127.0.0.1:8000'; // Ensure this matches your FastAPI backend's URL
+
+        // --- Helper Functions ---
+        function showLoading(buttonId, isLoading) {
+            const button = document.getElementById(buttonId);
+            const spinner = button.querySelector('.spinner-border');
+            if (isLoading) {
+                spinner.classList.remove('d-none');
+                button.setAttribute('disabled', 'true');
+            } else {
+                spinner.classList.add('d-none');
+                button.removeAttribute('disabled');
+            }
+        }
+
+        function displayResult(resultElementId, data, isError = false) {
+            const resultBox = document.getElementById(resultElementId);
+            resultBox.classList.remove('d-none');
+            if (isError) {
+                resultBox.classList.remove('alert-success');
+                resultBox.classList.add('alert-danger');
+                resultBox.innerHTML = `<strong>Error:</strong> ${data}`;
+            } else {
+                resultBox.classList.remove('alert-danger');
+                resultBox.classList.add('alert-success');
+                // Pretty print JSON for better readability
+                resultBox.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+        }
+
+        function hideResult(resultElementId) {
+            document.getElementById(resultElementId).classList.add('d-none');
+            document.getElementById(resultElementId).innerHTML = '';
+        }
+
+        // --- API Call Functions ---
+
+        // Text Analysis
+        document.getElementById('analyzeTextBtn').addEventListener('click', async () => {
+            const text = document.getElementById('textAnalysisInput').value;
+            hideResult('textAnalysisResult');
+            hideResult('textAnalysisError');
+            if (!text) {
+                displayResult('textAnalysisError', 'Please enter text for analysis.', true);
+                return;
+            }
+
+            showLoading('analyzeTextBtn', true);
+            try {
+                const response = await fetch(`${BACKEND_URL}/analyze/text`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    displayResult('textAnalysisResult', data);
+                } else {
+                    displayResult('textAnalysisError', data.detail || 'An unknown error occurred.', true);
+                }
+            } catch (error) {
+                displayResult('textAnalysisError', `Network error: ${error.message}`, true);
+            } finally {
+                showLoading('analyzeTextBtn', false);
+            }
+        });
+
+        // Language Detection
+        document.getElementById('detectLanguageBtn').addEventListener('click', async () => {
+            const text = document.getElementById('languageDetectionInput').value;
+            hideResult('languageDetectionResult');
+            hideResult('languageDetectionError');
+            if (!text) {
+                displayResult('languageDetectionError', 'Please enter text to detect language.', true);
+                return;
+            }
+
+            showLoading('detectLanguageBtn', true);
+            try {
+                const response = await fetch(`${BACKEND_URL}/analyze/language`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    displayResult('languageDetectionResult', data);
+                } else {
+                    displayResult('languageDetectionError', data.detail || 'An unknown error occurred.', true);
+                }
+            } catch (error) {
+                displayResult('languageDetectionError', `Network error: ${error.message}`, true);
+            } finally {
+                showLoading('detectLanguageBtn', false);
+            }
+        });
+
+        // OCR
+        document.getElementById('ocrBtn').addEventListener('click', async () => {
+            const fileInput = document.getElementById('ocrFileInput');
+            hideResult('ocrResult');
+            hideResult('ocrError');
+            if (fileInput.files.length === 0) {
+                displayResult('ocrError', 'Please select an image file.', true);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            showLoading('ocrBtn', true);
+            try {
+                const response = await fetch(`${BACKEND_URL}/ocr`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    displayResult('ocrResult', data);
+                } else {
+                    displayResult('ocrError', data.detail || 'An unknown error occurred.', true);
+                }
+            } catch (error) {
+                displayResult('ocrError', `Network error: ${error.message}`, true);
+            } finally {
+                showLoading('ocrBtn', false);
+            }
+        });
+
+        // Text-to-Speech
+        document.getElementById('ttsBtn').addEventListener('click', async () => {
+            const text = document.getElementById('ttsTextInput').value;
+            const voiceName = document.getElementById('ttsVoiceSelect').value;
+            const ttsAudio = document.getElementById('ttsAudio');
+            const ttsAudioContainer = document.getElementById('ttsAudioContainer');
+
+            ttsAudioContainer.classList.add('d-none');
+            ttsAudio.src = ''; // Clear previous audio
+            hideResult('ttsError');
+
+            if (!text) {
+                displayResult('ttsError', 'Please enter text to convert to speech.', true);
+                return;
+            }
+
+            showLoading('ttsBtn', true);
+            try {
+                const response = await fetch(`${BACKEND_URL}/speech/text-to-speech`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text, voice_name: voiceName })
+                });
+
+                if (response.ok) {
+                    const audioBlob = await response.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    ttsAudio.src = audioUrl;
+                    ttsAudioContainer.classList.remove('d-none');
+                    ttsAudio.play();
+                } else {
+                    const data = await response.json();
+                    displayResult('ttsError', data.detail || 'An unknown error occurred.', true);
+                }
+            } catch (error) {
+                displayResult('ttsError', `Network error: ${error.message}`, true);
+            } finally {
+                showLoading('ttsBtn', false);
+            }
+        });
+
+        // Speech-to-Text
+        document.getElementById('sttBtn').addEventListener('click', async () => {
+            const fileInput = document.getElementById('sttFileInput');
+            const language = document.getElementById('sttLanguageSelect').value;
+            hideResult('sttResult');
+            hideResult('sttError');
+
+            if (fileInput.files.length === 0) {
+                displayResult('sttError', 'Please select an audio file.', true);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('language', language); // Append language as a form field
+
+            showLoading('sttBtn', true);
+            try {
+                const response = await fetch(`${BACKEND_URL}/speech/speech-to-text`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    displayResult('sttResult', data);
+                } else {
+                    displayResult('sttError', data.detail || 'An unknown error occurred.', true);
+                }
+            } catch (error) {
+                displayResult('sttError', `Network error: ${error.message}`, true);
+            } finally {
+                showLoading('sttBtn', false);
+            }
+        });
+    </script>
+</body>
+</html>
