@@ -1,3 +1,5 @@
+linkedin profile: https://www.linkedin.com/in/khalid-kifayat
+
 Azure AI NLP Project
 This project is a web-based application that leverages Azure Cognitive Services for various Natural Language Processing (NLP) tasks. It consists of a FastAPI backend and an HTML/JavaScript frontend.
 
